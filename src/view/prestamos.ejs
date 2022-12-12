@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cliente</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<style>
+
+ /*SPINNER*/
+ #overlay{	
+        position: fixed;
+        top: 0;
+        z-index: 100;
+        width: 100%;
+        height:100%;
+        display: none;
+        background: rgba(0,0,0,0.6);
+      }
+      .cv-spinner {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;  
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px #ddd solid;
+        border-top: 4px #2e93e6 solid;
+        border-radius: 50%;
+        animation: sp-anime 0.8s infinite linear;
+      }
+      @keyframes sp-anime {
+        100% { 
+          transform: rotate(360deg); 
+        }
+      }
+      .is-hide{
+        display:none;
+      }
+</style>
+<script>
+    $(document).ready(function () {
+            $('#datos1').DataTable(
+            {
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+                }
+            } 
+            );
+        });
+    
+    $(document).ready(function () {
+            $('#datos2').DataTable(
+                {
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+                }
+            } 
+            );
+        });
+
+        $(document).ready(function(){
+            $('#IDOBSERVACIONRECIBIDO').change(function(){
+                var sel = $("#IDOBSERVACIONRECIBIDO option:selected").html();
+                $("#OBSERVACIONRECIBIDO").val(sel);
+                console.log(sel);
+            });
+        });
+
+        $(document).ready(function(){
+            $('#botonGuardar').click(function(){
+                var sel = $("#IDOBSERVACIONRECIBIDO option:selected").html();
+                $("#OBSERVACIONRECIBIDO").val(sel);
+                console.log(sel);
+            });
+        });
+
+       function devolverEquipo(id)
+       {
+           document.getElementById('IDPRESTAMOEQUIPOS').value = id;
+           console.log(id);
+       }
+</script>
+</head>
+<body>
+    <div id="overlay">
+        <div class="cv-spinner">
+            <span class="spinner"></span>
+        </div>
+    </div> 
+   <nav class="navbar-dark" style="background-color: #e3f2fd">
+    <ul class="nav nav-tabs ">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="tab" data-bs-target="#profile-tab-pane">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#contact-tab-pane">Devueltos</a>
+        </li>
+        <li class="nav-item ml-100">
+            <a class=" btn btn-outline-danger" href="/"  ><i class='bx bx-exit'></i></a>
+          </li>
+      </ul>
+    </nav>    
+    <div class="modal fade" id="equipoDevolucion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Equipo</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/updateDevolucion" method ="POST">                   
+                    <input type="text" class="form-control" id="IDPRESTAMOEQUIPOS" name="IDPRESTAMOEQUIPOS"  tabindex="1" hidden>                    
+                    <div class="row mt-1">
+                        <div class="col">
+                            <label for="user" class="form-label">ASUNTO DEVOLUCIÓN</label>
+                            <select id="IDOBSERVACIONRECIBIDO" name="IDOBSERVACIONRECIBIDO" class="form-select" aria-label="Default select example">
+                                <% asuntoEntrega.forEach((user)=> {%>
+                                <option value="<%= user.IDOBSERVACIONESPRESTAMOS %>" selected><%= user.OBSERVACION %></option>                            
+                                <% }) %>
+                            </select>
+                            <input type="text" class="form-control" id="OBSERVACIONRECIBIDO" name="OBSERVACIONRECIBIDO"  tabindex="1" hidden>
+                        </div>
+                        <div class="col">
+                            <label for="user" class="form-label">OBSERVACIONES DEVOLUCIÓN</label>
+                            <textarea class="form-control" id="OBSERVACIONESDERECIBIDO" name="OBSERVACIONESDERECIBIDO" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" tabindex="5" id="botonGuardar">Guardar</button>   
+                </form>  
+            </div>
+            <div class="modal-footer">                   
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>          
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <div class="row justify-content-center">
+                <div class="col-11" >
+                <a href="/prestamos/create" class="btn btn-outline-primary mt-4"><i class='bx bx-plus-circle'></i></a>                
+                <table class="table table-striped text-center"  id="datos1">
+                    <thead>
+                        <tr class="bg-primary text-white">
+                            <th scope="col">EQUIPO</th>
+                            <th scope="col">SERIAL</th>
+                            <th scope="col">CLIENTE</th>                
+                            <th scope="col">DOCUMENTO GARANTIA</th>
+                            <th scope="col">FECHA ENTREGA</th>                    
+                            <th scope="col">USUARIO ENTREGA</th>
+                            <th scope="col">ESTADO EQUIPO ENTREGA</th>
+                            <th scope="col">OBSERVACIONES ENTREGA</th>
+                            <th scope="col">Editar</th>
+                            <th scope="col">Devolver</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% usuario.forEach((user)=> { %>               
+                        <tr>
+                            <td><%= user.EQUIPO %></td>
+                            <td><%= user.SERIAL %></td>
+                            <td><%= user.DOCUMENTO %></td>
+                            <td><%= user.DOCUMENTOGARANTIA %></td>
+                            <td><%= user.FECHAENTREGA.toISOString().
+                                replace(/T/, ' ').      
+                                replace(/\..+/, '')  %></td>
+                            <td><%= user.USUARIOENTREGA %></td>
+                            <td><%= user.OBSERVACIONENTREGA %></td>            
+                            <td><%= user.OBSERVACIONESDENETREGA %></td>                                
+                            <td><a href="/actualizar/<%= user.IDPRESTAMOEQUIPO %>" class="btn btn-outline-warning"><i class='bx bx-edit-alt'></i></a></td>
+                            <td><button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#equipoDevolucion" onclick="devolverEquipo(<%= user.IDPRESTAMOEQUIPO %>)"><i class='bx bx-cart-download'></i></button></td>
+                            <!--<td> <input class="form-check-input"  type="checkbox"  id="<%= user.IDCOTIZACIONDETALLES %>" name="<%= user.IDCOTIZACIONDETALLES %>" onclick="validaCheckbox(<%= user.IDCOTIZACIONDETALLES %>)"></td> -->
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>        
+        <div class="tab-pane fade mt-2" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+            <div class="row justify-content-center ">
+                <div class="col-11 ">                
+                <table class="table table-striped text-center" id="datos2">
+                    <thead>
+                        <tr class="bg-primary text-white">
+                            <th scope="col">EQUIPO</th>
+                            <th scope="col">SERIAL</th>
+                            <th scope="col">CLIENTE</th>                
+                            <th scope="col">DOCUMENTO GARANTIA</th>
+                            <th scope="col">FECHA DEVOLUCIÓN</th>                    
+                            <th scope="col">USUARIO QUE RECIBE</th>
+                            <th scope="col">ESTADO EQUIPO DEVOLUCIÓN</th>
+                            <th scope="col">OBSERVACIONES DEVOLUCIÓN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% devuelto.forEach((user)=> { %>               
+                        <tr>
+                            <td><%= user.EQUIPO %></td>
+                            <td><%= user.SERIAL %></td>
+                            <td><%= user.DOCUMENTO %></td>
+                            <td><%= user.DOCUMENTOGARANTIA %></td>
+                            <td><%= user.FECHADEVOLUCION.toISOString().
+                                replace(/T/, ' ').      
+                                replace(/\..+/, '')  %></td>
+                            <td><%= user.USUARIORECIBE %></td>
+                            <td><%= user.OBSERVACIONRECIBIDO %></td>            
+                            <td><%= user.OBSERVACIONESDERECIBIDO %></td>                                                            
+                            <!--<td> <input class="form-check-input"  type="checkbox"  id="<%= user.IDCOTIZACIONDETALLES %>" name="<%= user.IDCOTIZACIONDETALLES %>" onclick="validaCheckbox(<%= user.IDCOTIZACIONDETALLES %>)"></td> -->
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>        
+    </div>
+    
+</body>
+</html>
+</html>
