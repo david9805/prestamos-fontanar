@@ -70,8 +70,14 @@ export const listContenedor = async (req,res) => {
         input("DEVUELTO",sql.VarChar,"SI").
         query(queries.prestamoEquipos);   
         const asuntoEntrega = await pool.request().
-        query(queries.asuntoEntrega);        
-        res.render(path.join(ruta+'/view/prestamos.ejs'),({usuario : prestamos.recordset,devuelto: devuletos.recordset,asuntoEntrega : asuntoEntrega.recordset}));        
+        query(queries.asuntoEntrega); 
+        const tipoDocumento = await pool.request().
+        query(queries.tipoDocumento);
+        const genero = await pool.request().
+        query(queries.genero);
+        const ciudad = await pool.request().
+        query(queries.ciudad);       
+        res.render(path.join(ruta+'/view/prestamos.ejs'),({usuario : prestamos.recordset,devuelto: devuletos.recordset,asuntoEntrega : asuntoEntrega.recordset,tipoDocumento : tipoDocumento.recordset,genero : genero.recordset,ciudad : ciudad.recordset}));        
     }
     catch (error)
     {
@@ -111,6 +117,142 @@ export const newAgendamiento = async (req,res) => {
     }
 }
 
+export const newCliente = async (req,res) => {
+    try
+    {
+        
+        const IDTIPODOCUMENTO = req.body.IDTIPODOCUMENTO;
+        const DOCUMENTO = req.body.DOCUMENTO;
+        const NOMBRE1 = req.body.NOMBRE1;
+        const NOMBRE2 = req.body.NOMBRE2;
+        const APELLIDO1 = req.body.APELLIDO1;
+        const APELLIDO2 = req.body.APELLIDO2;
+        let FECHANACIMIENTO = req.body.FECHANACIMIENTO;
+        const IDSEXO = req.body.IDSEXO;
+        const TELEFONO2 = req.body.TELEFONO2;
+        const EMAIL = req.body.EMAIL;
+        const IDCIUDADRESIDENCIA = req.body.IDCIUDADRESIDENCIA;
+        const DIRECCIONRESIDENCIA = req.body.DIRECCIONRESIDENCIA;    
+        let BIKELOVERS = req.body.BIKELOVERS;                             
+        let SEPARADOS = req.body.SEPARADOS;
+        let FONTANARENTRENA = req.body.FONTANARENTRENA;
+        let CARLOVERS = req.body.CARLOVERS;
+        let ENTRETENIMIENTONINOS = req.body.ENTRETENIMIENTONINOS;
+        let MOMS = req.body.MOMS;
+        let HACIENDAFONTANAR = req.body.HACIENDAFONTANAR;
+        let MUJEREMPRENDEDORA = req.body.MUJEREMPRENDEDORA;
+        const HABEASDATA = 'SI';
+        FECHANACIMIENTO = FECHANACIMIENTO + " 01:00.000";        
+        if (BIKELOVERS == null)
+        {
+            BIKELOVERS = 'NO'
+        }
+        else
+        {
+            BIKELOVERS = 'SI'
+        }
+
+        if (SEPARADOS == null)
+        {
+            SEPARADOS = 'NO'
+        }
+        else
+        {
+            SEPARADOS = 'SI'
+        }
+
+        if (FONTANARENTRENA == null)
+        {
+            FONTANARENTRENA = 'NO'
+        }
+        else
+        {
+            FONTANARENTRENA = 'SI'
+        }
+        
+        if (CARLOVERS == null)
+        {
+            CARLOVERS = 'NO'
+        }
+        else
+        {
+            CARLOVERS = 'SI'
+        }
+
+        if (ENTRETENIMIENTONINOS == null)
+        {
+            ENTRETENIMIENTONINOS = 'NO'
+        }
+        else
+        {
+            ENTRETENIMIENTONINOS = 'SI'
+        }
+
+        if (MOMS == null)
+        {
+            MOMS = 'NO'
+        }
+        else
+        {
+            MOMS = 'SI'
+        }
+
+        if (HACIENDAFONTANAR == null)
+        {
+            HACIENDAFONTANAR = 'NO'
+        }
+        else
+        {
+            HACIENDAFONTANAR = 'SI'
+        }
+
+        if (MUJEREMPRENDEDORA == null)
+        {
+            MUJEREMPRENDEDORA = 'NO'
+        }
+        else
+        {
+            MUJEREMPRENDEDORA = 'SI'
+        }
+        
+        const pool = await getConnection();        
+        const nuevo = await pool.request()
+        .input("IDTIPODOCUMENTO",sql.Numeric,IDTIPODOCUMENTO)
+        .input("DOCUMENTO",sql.VarChar,DOCUMENTO)
+        .input("NOMBRE1",sql.VarChar,NOMBRE1)
+        .input("NOMBRE2",sql.VarChar,NOMBRE2)
+        .input("APELLIDO1",sql.VarChar,APELLIDO1)            
+        .input("APELLIDO2",sql.VarChar,APELLIDO2)
+        .input("FECHANACIMIENTO",sql.DateTime,FECHANACIMIENTO)
+        .input("IDSEXO",sql.Numeric,IDSEXO)
+        .input("TELEFONO2",sql.VarChar,TELEFONO2)
+        .input("EMAIL",sql.VarChar,EMAIL)
+        .input("IDCIUDADRESIDENCIA",sql.Numeric,IDCIUDADRESIDENCIA)              
+        .input("DIRECCIONRESIDENCIA",sql.VarChar,DIRECCIONRESIDENCIA)            
+        .input("BIKELOVERS",sql.VarChar,BIKELOVERS)            
+        .input("SEPARADOS",sql.VarChar,SEPARADOS)        
+        .input("FONTANARENTRENA",sql.VarChar,FONTANARENTRENA)
+        .input("CARLOVERS",sql.VarChar,CARLOVERS)
+        .input("MOMS",sql.VarChar,MOMS)
+        .input("ENTRETENIMIENTONINOS",sql.VarChar,ENTRETENIMIENTONINOS)                    
+        .input("HACIENDAFONTANAR",sql.VarChar,HACIENDAFONTANAR)                                  
+        .input("MUJEREMPRENDEDORA",sql.VarChar,MUJEREMPRENDEDORA)                                  
+        .input("HABEASDATA",sql.VarChar,HABEASDATA)                                                                 
+        .input("USUARIOCREA",sql.VarChar,'WEB')                                                                 
+        .query(queries.crearCliente);   
+
+        
+        res.redirect(paginaWeb+'/inicio');
+              
+                         
+                 
+    }
+    catch (error)
+    {
+        res.status(500)
+        res.send(error.message)
+    }    
+}
 
 export const crearAgendamiento = async (req,res) => {
     try

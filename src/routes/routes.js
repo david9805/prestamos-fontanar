@@ -3,7 +3,7 @@ import {ruta} from '../app.js';
 import path from 'path';
 import {getConnection,sql} from '../database/conexion.js';
 import {queries} from '../database/query.js';
-import {newAgendamiento,crearAgendamiento,viewClient, result,listContenedor,seleccionEquipo,actualizarPrestamo,actualizarDevolucion} from '../controllers/contenedor.controller.js';
+import {newAgendamiento,crearAgendamiento,viewClient,newCliente,result,listContenedor,seleccionEquipo,actualizarPrestamo,actualizarDevolucion} from '../controllers/contenedor.controller.js';
 const router = Router();
 let existe = false;
 router.get('/',(req , res)=>{   
@@ -38,7 +38,9 @@ router.get('/inicio',listContenedor);
 
 router.get('/prestamos/create',newAgendamiento);
 
-router.post('/crearPrestamo',crearAgendamiento)
+router.post('/crearPrestamo',crearAgendamiento);
+
+router.post('/newCliente',newCliente);
 //router.put('/proveedor',);
 
 //router.delete('/proveedor',);
